@@ -1,0 +1,76 @@
+#!/usr/bin/python
+
+import def_func_ServeurNetwork as ServeurNetwork
+import def_func_LCD as LCD
+import sys
+import os
+import time
+import socket
+
+
+
+# ====================================
+# PROGRAMME PRINCIPAL
+# ====================================
+
+print "---------------------------------\n"
+
+# Initialisation de l ecran LCD
+
+ecran = LCD.Init()
+ecran.clear()
+
+cmd   = "ip addr show wlan0 | grep inet | awk '{print $2}' | cut -d/ -f1"
+ligne = LCD.run_cmd( cmd )
+
+ecran.message( "Bienvenue ...\n" )
+ecran.message( 'IPs %s' % ligne )
+time.sleep(5)
+
+# Initialisation du serveur
+
+iter   = 0
+while True :
+	iter = iter + 1
+	Socket    = ServeurNetwork.InitConnexion()
+	if ( Socket == 0 ) :
+		ecran.clear()
+		ecran.message( "Socket non dispo.\n" )
+		ecran.message( "Try again %d" %iter )
+		time.sleep(1)
+	else :
+		break
+		
+ecran.clear()
+ecran.message( "Serveur : OK\n" )
+ecran.message( "Wait IP Client..." )
+time.sleep( 5 )
+
+Connexion, AdressClient = ServeurNetwork.WaitClient( Socket )
+
+ecran.clear()
+ecran.message( "IPc %s \n" %AdressClient )
+ecran.message( "Wait message ... \n")
+
+# Attente d'un message reseau
+
+while True :
+	MsgClient = ServeurNetwork.ReadMsgClient( Connexion )
+
+	print "Message recu sur client: ", MsgClient
+	
+	ecran.clear()
+	ecran.message( MsgClient[0:16] )
+	ecran.message( "\n" )
+	ecran.message( MsgClient[ 16: ] )
+	
+	if ( MsgClient == "FIN" ) :
+		break
+
+ServeurNetwork.Close( Connexion )
+
+ecran.clear()
+ecran.message( "Arret systeme\n" )
+ecran.message( "Au revoir !" )
+
+print "---------------------------------\n"

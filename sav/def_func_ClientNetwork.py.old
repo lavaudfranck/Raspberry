@@ -1,0 +1,63 @@
+#!/usr/bin/python
+
+import socket
+import os
+import time
+import sys
+
+# ====================================
+# Allocation des variables Client
+# ====================================
+
+HOST = '192.168.0.41'
+PORT = 50000
+
+
+# ====================================
+# Initialisation de la liaison
+# Input  : aucune
+# Output : socket
+# ====================================
+def InitConnexion() :
+
+	print "Tentative de connexion au serveur IP", HOST
+
+	# creation du socket
+	
+	mySocket = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+
+	# envoi d'une requete de connexion au serveur :
+	try:
+    		mySocket.connect( ( HOST, PORT ) )
+	except socket.error:
+    		print "La connexion a echoue sur", HOST
+    		sys.exit()    
+		
+	print "Connexion etablie avec le serveur sur", HOST
+
+	return mySocket
+
+
+# ===================================
+# Envoie un message au serveur
+# Input : socket
+# Output : aucune
+# ===================================
+def SendMsg( mySocket, msgClient ) :
+
+	mySocket.send(msgClient)
+
+	return
+
+
+# ==================================
+# Fermeture de la connexion
+# Input  : socket
+# Output : aucune
+# ==================================
+def Close( mySocket ) :
+
+	print "CLIENT : Connexion interrompue sur demande."
+	#mySocket.close()
+	
+	return

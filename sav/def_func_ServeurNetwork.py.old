@@ -1,0 +1,97 @@
+#!/usr/bin/python
+import sys
+import socket
+import os
+import time
+import def_func_LCD as LCD
+
+# ====================================
+# Allocation des variables serveurs
+# ====================================
+
+HOST = '192.168.0.41'
+PORT = 50000
+
+
+# ====================================
+# Initialisation du Serveur
+# Input  : aucune
+# Output : socket
+# ====================================
+def InitConnexion() :
+	
+	cmd   = "ip addr show wlan0 | grep inet | awk '{print $2}' | cut -d/ -f1"
+	HOST = LCD.run_cmd( cmd )
+	print "Lancement du serveur sur IP=", HOST
+
+	# creation du socket
+	
+	mySocket = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+
+	# liaison du socket a une adresse precise
+	
+	try:
+    		mySocket.bind( ( HOST, PORT ) )
+	except socket.error:
+    		print "La liaison du socket a l adresse choisie a echoue."
+		mySocket = 0
+    		#sys.exit()
+	
+	print "Serveur demarre avec succes."
+	
+	return mySocket
+
+
+# ====================================
+# Attente de la connexion d'un client
+# Input  : socket
+# Output : connexion, adresse
+# ====================================	
+def WaitClient( mySocket ) :
+	# Attente de la requete de connexion d un client
+		
+    	print "SERVEUR : Pret, en attente d'un client ..."
+    	mySocket.listen( 5 )
+    
+    	# Etablissement de la connexion
+		
+    	connexion, adresse = mySocket.accept()
+    	print "SERVEUR : Client connecte, adresse IP %s, port %s" % ( adresse[0], adresse[1] )
+		
+	return connexion, adresse[0]
+	
+			
+# ====================================
+# Lecture requete du client
+# Input  : connexion
+# Output : message
+# ====================================	
+def ReadMsgClient( connexion ) :
+
+	##print "SERVEUR : En attente d'un message du client"
+
+	# Dialogue avec le client
+	
+    	#connexion.send( "SERVEUR : Vous etes connecte au serveur F.Lavaud@Rasberry-Pi. Envoyez vos messages." )
+    	msgClient = connexion.recv(1024)
+	
+    	##print "SERVEUR : Message du client recu --> '", msgClient, "'"
+        
+	# msgServeur = raw_input("S> ")
+        # connexion.send( msgServeur )
+        # msgClient = connexion.recv( 1024 )
+	
+	return msgClient
+
+
+# ====================================
+# Fermeture de la connexion avec le client
+# Input  : connexion
+# Output : aucune
+# ====================================	
+def Close( connexion ) :
+    	#connexion.send( "SERVEUR : Au revoir !" )
+    	print "SERVEUR : Connexion fermee sur demande."
+    	connexion.close()
+			
+	return

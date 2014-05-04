@@ -1,0 +1,96 @@
+ <head>
+    <title>Raspberry F.Lavaud</title>
+  	<script src="//ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script> 
+  </head>
+  <body>
+    <h1 align="center">Controle distant &quot;Raspberry Pi - SpyCar&quot;</h1>
+  <table width="85%" border="0">
+  <tr>
+      <td width="52%" height="159" align="center" valign="middle"><p align="left"><strong>Controle Direction :</strong></p>
+        <table width="66%" border="0" align="center">
+        <tr>
+          <td align="center" valign="middle"><input type="button" value="&lt;&lt;" onclick="go('lll')" style="font-size:100%;"></td>
+          <td align="center" valign="middle">&nbsp;</td>
+          <td align="center" valign="middle"><input type="button" value="Up !" onclick="go('uu')" style="font-size:100%;"></td>
+          <td align="center" valign="middle">&nbsp;</td>
+          <td align="center" valign="middle"><input type="button" value="&gt;&gt;" onclick="go('rrr')" style="font-size:100%;"></td>
+        </tr>
+        <tr>
+          <td width="16%" align="center" valign="middle">&nbsp;</td>
+          <td width="13%" align="center" valign="middle"><input type="button" value="&lt;" onclick="go('ll')" style="font-size:100%;"></td>
+          <td width="30%" align="center" valign="middle"><input type="button" value="Up" onclick="go('u')" style="font-size:100%;"></td>
+          <td width="12%" align="center" valign="middle"><input type="button" value="&gt;" onclick="go('rr')" style="font-size:100%;"></td>
+          <td width="29%" align="center" valign="middle">&nbsp;</td>
+        </tr>
+        <tr>
+          <td align="center" valign="middle">&nbsp;</td>
+          <td align="center" valign="middle"><input type="button" value="Left" onclick="go('l')" style="font-size:100%;"></td>
+          <td align="center" valign="middle"><input type="button" value="[]" onclick="go('s')" style="font-size:100%;"></td>
+          <td align="center" valign="middle"><input type="button" value="Right" onclick="go('r')" style="font-size:100%;"></td>
+          <td align="center" valign="middle">&nbsp;</td>
+        </tr>
+        <tr>
+          <td align="center" valign="middle">&nbsp;</td>
+          <td align="center" valign="middle">&nbsp;</td>
+          <td align="center" valign="middle"><input type="button" value="Back" onclick="go('b')" style="font-size:100%;"></td>
+          <td align="center" valign="middle">&nbsp;</td>
+          <td align="center" valign="middle">&nbsp;</td>
+        </tr>
+        <tr>
+          <td align="center" valign="middle">&nbsp;</td>
+          <td align="center" valign="middle">&nbsp;</td>
+          <td align="center" valign="middle"><input type="button" value="Back !" onclick="go('bb')" style="font-size:100%;"></td>
+          <td align="center" valign="middle">&nbsp;</td>
+          <td align="center" valign="middle">&nbsp;</td>
+        </tr>
+    </table></td>
+      <td width="48%" align="center" valign="middle" bgcolor="#FFFFFF" src="172.20.10.3:8081"><embed src="http://172.20.10.3:8081/"
+          controls="true"
+          loop="true"
+          autostart="true"
+          height="288" width="352" border="0"></embed></td>
+    
+    
+    </tr>
+  <tr>
+    <td height="39" colspan="2" align="center"
+valign="middle"><strong>Serveur Web : </strong>
+    <input type="button" value="Restart" onclick="go('restart')" style="font-size:100%;"></td>
+    </tr>
+  </table>  
+  <p><strong>Controle Robot :</strong>
+    <input type="radio" name="robot" id="robot_off" value="off" onclick="check1()"> Off
+    <input type="radio" name="robot" id="robot_on" value="on" onclick="check1()"> On
+  </p>
+  
+  <p><strong>Controle Systeme :</strong>
+    <input type="button" value="Reboot" onclick="go('reboot')" style="font-size:100%;">
+    <input type="button" style="font-size:100%;" onclick="go('q')" value="Shutdown">
+  </p>
+<script type="text/javascript">
+      function go(qry) {
+	    new Ajax.Request('doStuff.py?q=' + qry, 
+	    	{method: 'GET'}
+        );
+      }
+      function check1() {
+        var radio_check_val = "";
+        for (i = 0; i < document.getElementsByName('robot').length; i++) {
+            if (document.getElementsByName('robot')[i].checked) {
+	        // alert("the robot button was clicked: " + document.getElementsByName('robot')[i].value);
+		radio_check_val = document.getElementsByName('robot')[i].value;
+		if (radio_check_val=="on") {
+		    go('randomON');
+                } 
+                if (radio_check_val=="off") {
+		    go('randomOFF');
+                }
+            }
+            if (radio_check_val === "") {
+                // alert("please select radio button");
+            }
+        }
+      }
+      </script>
+  </body>
+</html>
